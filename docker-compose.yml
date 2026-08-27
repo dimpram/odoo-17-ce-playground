@@ -1,21 +1,24 @@
 services:
   odoo:
     image: odoo:17.0
+    # command: --proxy-mode # Use this for caddy/nginx configuration
     env_file: .env
     depends_on:
       - postgres
     ports:
-      - "8069:8069"
+      - "127.0.0.1:8069:8069"
+    restart: unless-stopped
     volumes:
       - data:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
   postgres:
-    image: postgis/postgis:15-3.4
+    image: postgres:15
     env_file: .env
+    restart: unless-stopped
     volumes:
       - db:/var/lib/postgresql/data/pgdata
 
 volumes:
   data:
-  db: 
+  db:
